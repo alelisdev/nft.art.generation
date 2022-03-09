@@ -3,6 +3,7 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
 const sha1 = require('sha1')
 const { createCanvas, loadImage } = require('canvas');
+const { time } = require("console");
 // const sha1 = require(`${basePath}/node_modules/sha1`);
 // const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
 const buildDir = `${basePath}/build`;
@@ -47,6 +48,8 @@ const buildSetup = () => {
   }
 };
 
+
+// Set Rarity with the names: ex. background#100 => rarity = 100
 const getRarityWeight = (_str) => {
   let nameWithoutExtension = _str.slice(0, -4);
   var nameWithoutWeight = Number(
@@ -138,7 +141,7 @@ const addMetadata = (_dna, _edition) => {
     date: dateTime,
     ...extraMetadata,
     attributes: attributesList,
-    compiler: "HashLips Art Engine",
+    compiler: "Art Engine",
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -172,6 +175,7 @@ const addMetadata = (_dna, _edition) => {
 
 const addAttributes = (_element) => {
   let selectedElement = _element.layer.selectedElement;
+
   attributesList.push({
     trait_type: _element.layer.name,
     value: selectedElement.name,
@@ -276,6 +280,7 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
 };
 
 const createDna = (_layers) => {
+  
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
@@ -329,6 +334,44 @@ function shuffle(array) {
   }
   return array;
 }
+// The rule can't be used together in layers
+const array_shuffle = (arr) => {
+  arr.sort(() => Math.random() - 0.5);
+}
+
+const rule = (layers) => {
+
+  let remove_order = layerConfigurations[0].removeOrder;
+  array_shuffle(remove_order);
+
+  let removed_layer = [];
+  let real_layer = [];
+  let resLayer = layers;
+  
+  remove_order.forEach((item) => {
+    
+    if (real_layer.some(r=> layerConfigurations[0].layerMutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
+      removed_layer.push(item.name);
+    } else if (removed_layer.some(r=> layerConfigurations[0].layerMutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
+      removed_layer.push(item.name);
+    } else if (layerConfigurations[0].layerMutual[item.name] && layerConfigurations[0].layerMutual[item.name].length > 0) {
+      if(real_layer.indexOf(item.name) == -1 && removed_layer.indexOf(item.name) == -1) {
+        real_layer.push(item.name);
+      }
+      layerConfigurations[0].layerMutual[item.name].forEach((val) => {
+        if (removed_layer.indexOf(val) == -1) {
+          removed_layer.push(val);
+        }
+      })
+    } else {
+      if(real_layer.indexOf(item.name) == -1 && removed_layer.indexOf(item.name) == -1) {
+        real_layer.push(item.name);
+      }
+    }
+  })
+  return resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
+}
+
 
 const startCreating = async () => {
   let layerConfigIndex = 0;
@@ -355,11 +398,35 @@ const startCreating = async () => {
     while (
       editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
     ) {
-      let newDna = createDna(layers);
-      if (isDnaUnique(dnaList, newDna)) {
-        let results = constructLayerToDna(newDna, layers);
-        let loadedElements = [];
+      let custom_layers = rule(layers);
+      let newDna = createDna(custom_layers);
+      // Hair/Mohawk.pngMohawk.png can not be used
+      let HatsElements = [];
+      let WigsElements = [];
+      HatsElements = fs.readdirSync(`${basePath}/layers/Hats`);
+      WigsElements = fs.readdirSync(`${basePath}/layers/Wigs`);
+      let exist = false;
 
+      if(newDna.indexOf('Mohawk.png')) {
+        HatsElements.forEach((filename) => {
+          if(newDna.indexOf(filename) !== -1 ) {
+            exist = true;
+          }
+        })
+  
+        WigsElements.forEach((filename) => {
+          if(newDna.indexOf(filename) !== -1) {
+            exist = true;
+          }
+        })
+      }
+      
+      if (exist) 
+        continue;
+
+      if (isDnaUnique(dnaList, newDna)) {
+        let results = constructLayerToDna(newDna, custom_layers);
+        let loadedElements = [];
         results.forEach((layer) => {
           loadedElements.push(loadLayerImg(layer));
         });
