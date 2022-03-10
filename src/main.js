@@ -349,7 +349,9 @@ const rule = (layers) => {
   let resLayer = layers;
   
   remove_order.forEach((item) => {
-    
+    // console.log(item.name);
+    // console.log('removed layer', removed_layer)
+    // console.log('real_layer', real_layer)
     if (real_layer.some(r=> layerConfigurations[0].layerMutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
       removed_layer.push(item.name);
     } else if (removed_layer.some(r=> layerConfigurations[0].layerMutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
@@ -369,6 +371,10 @@ const rule = (layers) => {
       }
     }
   })
+
+  // console.log('removed layer', removed_layer)
+  // console.log('real_layer', real_layer)
+  // console.log('res', resLayer.filter(item => removed_layer.indexOf(item.name) == -1))
   return resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
 }
 
@@ -407,7 +413,7 @@ const startCreating = async () => {
       WigsElements = fs.readdirSync(`${basePath}/layers/Wigs`);
       let exist = false;
 
-      if(newDna.indexOf('Mohawk.png')) {
+      if(newDna.indexOf('Mohawk.png') !== -1) {
         HatsElements.forEach((filename) => {
           if(newDna.indexOf(filename) !== -1 ) {
             exist = true;
@@ -421,8 +427,8 @@ const startCreating = async () => {
         })
       }
       
-      if (exist) 
-        continue;
+      // if (exist) 
+      //   continue;
 
       if (isDnaUnique(dnaList, newDna)) {
         let results = constructLayerToDna(newDna, custom_layers);

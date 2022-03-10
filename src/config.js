@@ -46,12 +46,12 @@ const layerConfigurations = [
       Eyebrows: [],
       Glasses: [],
       Hair: [],
-      Wigs: [''], 
+      Wigs: [], 
       Hats: [], 
       Horniments: [], 
       Mustache: [], 
       Mouths: [],
-      Masks: ['Mouths', 'Mustache', 'Glasses', 'Wigs', 'Hats'],
+      Masks: ['Mouths', 'Mustache', 'Glasses', 'Wigs', 'Hats']
     },
 
     growEditionSizeTo: 150,
