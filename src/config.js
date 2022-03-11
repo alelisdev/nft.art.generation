@@ -35,8 +35,8 @@ const layerConfigurations = [
       Tattoos: ['Sweaters', 'ShirtsNoJacket', 'Jackets'],
       Shirts: [],
       ShirtsNoJacket: [],
-      Sweaters: [],
-      Jerseys: [],
+      Sweaters: ['Shirts', 'ShirtsNoJacket'],
+      Jerseys: ['Shirts', 'ShirtsNoJacket', 'Sweaters'],
       Suspenders: ['Jackets', 'Sweaters', 'ShirtsNoJacket'],
       Necklaces: ['ShirtsNoJacket', 'Sweaters'],
       Jackets: ['ShirtsNoJacket', 'Sweaters'],
@@ -46,42 +46,19 @@ const layerConfigurations = [
       Eyebrows: [],
       Glasses: [],
       Hair: [],
-      Wigs: [], 
-      Hats: [], 
-      Horniments: [], 
-      Mustache: [], 
+      Wigs: [],
+      Hats: [],
+      Horniments: [],
+      Mustache: [],
       Mouths: [],
       Masks: ['Mouths', 'Mustache', 'Glasses', 'Wigs', 'Hats']
     },
 
-    growEditionSizeTo: 150,
-
-    removeOrder: [
-      { name: "Backgrounds" },
-      { name: "Bodies" },
-      { name: "Horns" },
-      { name: "Tattoos" },
-      { name: "Shirts" },
-      { name: "ShirtsNoJacket" },
-      { name: "Sweaters" },
-      { name: "Jerseys" },
-      { name: "Suspenders" },
-      { name: "Necklaces" },
-      { name: "Jackets" },
-      { name: "Earrings" },
-      { name: "Eyes" },
-      { name: "Eyeballs" },
-      { name: "Eyebrows" },
-      { name: "Glasses" },
-      { name: "Hair" },
-      { name: "Wigs" },
-      { name: "Hats" },
-      { name: "Horniments" },
-      { name: "Mustache" },
-      { name: "Mouths" },
-      { name: "Masks" }
+    // required layer or random layer
+    randLayers : ['Tattoos', 'Shirts', 'ShirtsNoJacket', 'Sweaters', 'Jerseys', 'Suspenders', 'Necklaces', 'Jackets',
+    'Earrings', 'Eyeballs', 'Glasses', 'Wigs', 'Hats', 'Horniments', 'Mustache', 'Masks'
     ],
-
+    growEditionSizeTo: 150,
     layersOrder: [
       { name: "Backgrounds" },
       { name: "Bodies" },
@@ -107,7 +84,6 @@ const layerConfigurations = [
       { name: "Mouths" },
       { name: "Masks" }
     ],
-
     // layersOrder: [
     //   { name: "Background" },
     //   { name: "Characters" },

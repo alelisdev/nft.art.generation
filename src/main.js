@@ -334,14 +334,28 @@ function shuffle(array) {
   }
   return array;
 }
-// The rule can't be used together in layers
+// shffule the removing layers
 const array_shuffle = (arr) => {
   arr.sort(() => Math.random() - 0.5);
 }
 
+
+// Remove the not required layer randomly
+const randomeLayer = (layers) => {
+  let randLayers = layerConfigurations[0].randLayers;
+  let randLayersResults = [];
+  randLayers.forEach(layer => {
+    if (Math.random() < 0.5) {
+      randLayersResults.push(layer);
+    }
+  });
+  return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
+}
+
+// The rule can't be used together in layers
 const rule = (layers) => {
 
-  let remove_order = layerConfigurations[0].removeOrder;
+  let remove_order = layerConfigurations[0].layersOrder;
   array_shuffle(remove_order);
 
   let removed_layer = [];
@@ -373,7 +387,7 @@ const rule = (layers) => {
   })
 
   // console.log('removed layer', removed_layer)
-  // console.log('real_layer', real_layer)
+  console.log('real_layer', real_layer)
   // console.log('res', resLayer.filter(item => removed_layer.indexOf(item.name) == -1))
   return resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
 }
@@ -404,7 +418,8 @@ const startCreating = async () => {
     while (
       editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
     ) {
-      let custom_layers = rule(layers);
+      let randLyers = randomeLayer(layers);
+      let custom_layers = rule(randLyers);
       let newDna = createDna(custom_layers);
       // Hair/Mohawk.pngMohawk.png can not be used
       let HatsElements = [];
