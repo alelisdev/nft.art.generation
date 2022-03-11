@@ -27,7 +27,7 @@ const layerConfig = [
     name: 'Backgrounds',
     mutual: [],
     required: true,
-    rarity: [100, 90, 80, 45, 64, 46, 46, ,57,],
+    rarity: [100, 90, 30, 20, 40, 50, 50, 70, 20, 30],
   },
   {
     id: 2,

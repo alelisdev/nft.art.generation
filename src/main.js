@@ -71,7 +71,7 @@ const getRarityWeight = (idx, path) => {
   const rarity = currentLayer.rarity;
   let weight = 1;
   if (Array.isArray(rarity)) {
-    weight = rarity[idx]
+    weight = rarity[idx];
   } else if (rarity === 'random') {
     weight = Math.floor(Math.random() * 100) + 1
   } {
