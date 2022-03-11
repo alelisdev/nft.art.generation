@@ -21,105 +21,172 @@ const solanaMetadata = {
   ],
 };
 
-// If you have selected Solana then the collection starts from 0 automatically
-
-
-
-
-const layerConfigurations = [
+const layerConfig = [
   {
-    layerMutual : {
-      Backgrounds: [],
-      Bodies: [],
-      Horns: [],
-      Tattoos: ['Sweaters', 'ShirtsNoJacket', 'Jackets'],
-      Shirts: [],
-      ShirtsNoJacket: [],
-      Sweaters: ['Shirts', 'ShirtsNoJacket'],
-      Jerseys: ['Shirts', 'ShirtsNoJacket', 'Sweaters'],
-      Suspenders: ['Jackets', 'Sweaters', 'ShirtsNoJacket'],
-      Necklaces: ['ShirtsNoJacket', 'Sweaters'],
-      Jackets: ['ShirtsNoJacket', 'Sweaters'],
-      Earrings: [],
-      Eyes: [],
-      Eyeballs: [],
-      Eyebrows: [],
-      Glasses: [],
-      Hair: [],
-      Wigs: [],
-      Hats: [],
-      Horniments: [],
-      Mustache: [],
-      Mouths: [],
-      Masks: ['Mouths', 'Mustache', 'Glasses', 'Wigs', 'Hats']
-    },
-
-    // required layer or random layer
-    randLayers : ['Tattoos', 'Shirts', 'ShirtsNoJacket', 'Sweaters', 'Jerseys', 'Suspenders', 'Necklaces', 'Jackets',
-    'Earrings', 'Eyeballs', 'Glasses', 'Wigs', 'Hats', 'Horniments', 'Mustache', 'Masks'
-    ],
-    growEditionSizeTo: 150,
-    layersOrder: [
-      { name: "Backgrounds" },
-      { name: "Bodies" },
-      { name: "Horns" },
-      { name: "Tattoos" },
-      { name: "Shirts" },
-      { name: "ShirtsNoJacket" },
-      { name: "Sweaters" },
-      { name: "Jerseys" },
-      { name: "Suspenders" },
-      { name: "Necklaces" },
-      { name: "Jackets" },
-      { name: "Earrings" },
-      { name: "Eyes" },
-      { name: "Eyeballs" },
-      { name: "Eyebrows" },
-      { name: "Glasses" },
-      { name: "Hair" },
-      { name: "Wigs" },
-      { name: "Hats" },
-      { name: "Horniments" },
-      { name: "Mustache" },
-      { name: "Mouths" },
-      { name: "Masks" }
-    ],
-    // layersOrder: [
-    //   { name: "Background" },
-    //   { name: "Characters" },
-    //   { name: "Eyes" },
-    //   { name: "Mouth" },
-    //   // { name: "Eyeswear" },
-    //   { name: "headwear" },
-    //   { name: "chains" },
-    // ],
-
-
-    // growEditionSizeTo: 5,
-    // layersOrder: [
-
-
-
-    //   // { name: "Background" },
-    //   // { name: "Eyeball" },
-    //   // { name: "Eye color" },
-    //   // { name: "Iris" },
-    //   // { name: "Shine" },
-    //   // { name: "Bottom lid" },
-    //   // { name: "Top lid" },
-    //   // {name: "Background"},
-    //   // // {name: "Backgear"},
-    //   // {name: "Characters"},
-    //   // {name: "headwear"},
-    //   // {name: "Eyes"},
-    //   // {name: "chains"},
-    //   // {name: "Mouth"},
-    // ],
+    id: 1,
+    name: 'Backgrounds',
+    mutual: [],
+    required: true,
+    rarity: [100, 90, 80, 45, 64, 46, 46, ,57,],
   },
-];
+  {
+    id: 2,
+    name: 'Bodies',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 3,
+    name: 'Horns',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 4,
+    name: 'Tattoos',
+    mutual: ['Sweaters', 'ShirtsNoJacket', 'Jackets'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 5,
+    name: 'Shirts',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 6,
+    name: 'ShirtsNoJacket',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 7,
+    name: 'Sweaters',
+    mutual: ['Shirts', 'ShirtsNoJacket'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 8,
+    name: 'Jerseys',
+    mutual: ['Shirts', 'ShirtsNoJacket', 'Sweaters'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 9,
+    name: 'Suspenders',
+    mutual: ['Jackets', 'Sweaters', 'ShirtsNoJacket'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 10,
+    name: 'Necklaces',
+    mutual: ['ShirtsNoJacket', 'Sweaters'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 11,
+    name: 'Jackets',
+    mutual: ['ShirtsNoJacket', 'Sweaters'],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 12,
+    name: 'Earrings',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 13,
+    name: 'Eyes',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 14,
+    name: 'Eyeballs',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 15,
+    name: 'Eyebrows',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 16,
+    name: 'Glasses',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 17,
+    name: 'Hair',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 18,
+    name: 'Wigs',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 19,
+    name: 'Hats',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 20,
+    name: 'Horniments',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 21,
+    name: 'Mustache',
+    mutual: [],
+    required: false,
+    rarity: 'None',
+  },
+  {
+    id: 22,
+    name: 'Mouths',
+    mutual: [],
+    required: true,
+    rarity: 'None',
+  },
+  {
+    id: 23,
+    name: 'Masks',
+    mutual: ['Mouths'],
+    required: false,
+    rarity: 'None',
+  }
+]
 
+const growEditionSizeTo = 150;
 const shuffleLayerConfigurations = false;
-
 const debugLogs = false;
 
 const format = {
@@ -187,7 +254,6 @@ module.exports = {
   description,
   background,
   uniqueDnaTorrance,
-  layerConfigurations,
   rarityDelimiter,
   preview,
   shuffleLayerConfigurations,
@@ -200,4 +266,6 @@ module.exports = {
   solanaMetadata,
   gif,
   preview_gif,
+  layerConfig,
+  growEditionSizeTo
 };
