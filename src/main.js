@@ -64,17 +64,18 @@ const buildSetup = () => {
 };
 
 
-// Set Rarity with the names: ex. background#100 => rarity = 100
+// Set Rarity with the 
 const getRarityWeight = (idx, path) => {
   let layerName = path.split('/').pop();
   const currentLayer = layerConfig.filter(item => item.name == layerName)[0];
+  console.log(currentLayer);
   const rarity = currentLayer.rarity;
   let weight = 1;
   if (Array.isArray(rarity)) {
     weight = rarity[idx];
   } else if (rarity === 'random') {
     weight = Math.floor(Math.random() * 100) + 1
-  } {
+  } else {
     weight = 1
   } 
   return weight;
@@ -296,6 +297,7 @@ const createDna = (_layers) => {
     });
     // number between 0 - totalWeight
     let random = Math.floor(Math.random() * totalWeight);
+    console.log(random)
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
