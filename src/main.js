@@ -68,7 +68,7 @@ const buildSetup = () => {
 const getRarityWeight = (idx, path) => {
   let layerName = path.split('/').pop();
   const currentLayer = layerConfig.filter(item => item.name == layerName)[0];
-  console.log(currentLayer);
+  // console.log(currentLayer);
   const rarity = currentLayer.rarity;
   let weight = 1;
   if (Array.isArray(rarity)) {
@@ -292,12 +292,18 @@ const createDna = (_layers) => {
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
+    // let test = [11,2,22,1].sort((a, b) => b - a)
+    // layer.sort((a, b) => b - a)
     layer.elements.forEach((element) => {
       totalWeight += element.weight;
     });
     // number between 0 - totalWeight
+    
+    // for (let i = 0; i < 100; i++) {
+    //   console.log(Math.random());
+    // }
     let random = Math.floor(Math.random() * totalWeight);
-    console.log(random)
+    // console.log(random)
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
@@ -369,19 +375,18 @@ const randomeLayer = (layers) => {
 
 // The rule can't be used together in layers
 const rule = (layers) => {
+  let remove_order = [];
 
-  let remove_order = layers_order;
+  layers.forEach(layer => {
+    remove_order.push(layer.name)
+  });
+
   array_shuffle(remove_order);
-
   let removed_layer = [];
   let real_layer = [];
   let resLayer = layers;
   
   remove_order.forEach((item) => {
-    // console.log(item.name);
-    // console.log('removed layer', removed_layer)
-    // console.log('real_layer', real_layer)
-    // console.log(layers_mutual);
     if (real_layer.some(r=> layers_mutual[item].includes(r)) && removed_layer.indexOf(item) == -1) {
       removed_layer.push(item);
     } else if (removed_layer.some(r=> layers_mutual[item].includes(r)) && removed_layer.indexOf(item) == -1) {
@@ -401,10 +406,7 @@ const rule = (layers) => {
       }
     }
   })
-  console.log('real_layer', real_layer);
-  // console.log('res', resLayer.filter(item => removed_layer.indexOf(item.name) == -1))
   return resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
-
 }
 
 const startCreating = async () => {
