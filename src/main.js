@@ -54,7 +54,7 @@ const buildSetup = () => {
   }
 
   layerConfig.forEach(item => {
-    layers_order.push(item.name);
+    layers_order.push({name: item.name, required: item.required});
     
     layers_mutual[item.name] = item.mutual;
     if(item.required == false) {
@@ -65,11 +65,17 @@ const buildSetup = () => {
 
 
 // Set Rarity with the 
-const getRarityWeight = (idx, path) => {
+const getRarityWeight = (idx, path, required) => {
   let layerName = path.split('/').pop();
   const currentLayer = layerConfig.filter(item => item.name == layerName)[0];
   // console.log(currentLayer);
-  const rarity = currentLayer.rarity;
+  let rarity = [];
+  if(required) {
+    rarity = currentLayer.rarity;
+  } else {
+    rarity = currentLayer.rarity.shift();
+  }
+
   let weight = 1;
   if (Array.isArray(rarity)) {
     weight = rarity[idx];
@@ -93,7 +99,7 @@ const cleanName = (_str) => {
   return nameWithoutWeight;
 };
 
-const getElements = (path) => {
+const getElements = (path, required) => {
   return fs
     .readdirSync(path)
     .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
@@ -103,7 +109,7 @@ const getElements = (path) => {
         name: cleanName(i),
         filename: i,
         path: `${path}/${i}`,
-        weight: getRarityWeight(index, path),
+        weight: getRarityWeight(index, path, required),
       };
     });
 };
@@ -111,8 +117,9 @@ const getElements = (path) => {
 const layersSetup = () => {
   const layers = layers_order.map((layer, index) => ({
     id: index,
-    elements: getElements(`${layersDir}/${layer}`),
-    name: layer,
+    elements: getElements(`${layersDir}/${layer.name}`, layer.required),
+    required: layer.required,
+    name: layer.name,
     blend: "source-over",
     opacity: 1,
     bypassDNA: false,
@@ -278,6 +285,7 @@ const filterDNAOptions = (_dna) => {
  * @returns Cleaned DNA string without querystring parameters.
  */
 const removeQueryStrings = (_dna) => {
+  console.log(_dna)
   const query = /(\?.*$)/;
   return _dna.replace(query, "");
 };
@@ -357,19 +365,30 @@ const array_shuffle = (arr) => {
 
 // Remove the not required layer randomly
 const randomeLayer = (layers) => {
+  console.log(layers);
   let randLayers = [];
   layerConfig.forEach(item => {
     if(item.required == false) {
-      randLayers.push(item.name);
+      randLayers.push({name: item.name, rarity: item.rarity});
     }
   });
-  
+
+
   let randLayersResults = [];
+  let totalWeight = 0;
   randLayers.forEach(layer => {
-    if (Math.random() < 0.5) {
-      randLayersResults.push(layer);
-    }
+    totalWeight = totalWeight + layer.rarity[0];
   });
+  let random = Math.floor(Math.random() * totalWeight);
+  // console.log(random)
+  for (var i = 0; i < randLayers.length; i++) {
+    // subtract the current weight from the random weight until we reach a sub zero value.
+    // random -= randLayers[i].rarity[0];
+    if (random / randLayers.length < randLayers[i]) {
+      randLayersResults.push(randLayers[i]);
+    }
+  }
+  
   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
 }
 
