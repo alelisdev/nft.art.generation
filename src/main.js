@@ -68,17 +68,20 @@ const buildSetup = () => {
 const getRarityWeight = (idx, path, required) => {
   let layerName = path.split('/').pop();
   const currentLayer = layerConfig.filter(item => item.name == layerName)[0];
-  // console.log(currentLayer);
-  let rarity = [];
-  if(required) {
-    rarity = currentLayer.rarity;
-  } else {
-    rarity = currentLayer.rarity.shift();
-  }
-
+  const rarity = currentLayer.rarity;
   let weight = 1;
   if (Array.isArray(rarity)) {
-    weight = rarity[idx];
+    if(required == false) {
+      tempRarrity = [];
+      rarity.forEach((item, index) => {
+        if(index !== 0) {
+          tempRarrity.push(item);
+        } 
+      })
+      weight = tempRarrity[idx]
+    } else {
+      weight = rarity[idx];
+    }
   } else if (rarity === 'random') {
     weight = Math.floor(Math.random() * 100) + 1
   } else {
@@ -377,16 +380,27 @@ const randomeLayer = (layers) => {
   let randLayersResults = [];
   let totalWeight = 0;
   randLayers.forEach(layer => {
-    totalWeight = totalWeight + layer.rarity[0];
+    if(Array.isArray(layer.rarity)){
+      totalWeight = totalWeight + layer.rarity[0];
+    } else {
+      totalWeight = totalWeight + Math.floor(Math.random() * 100) + 1;
+    }
   });
   let random = Math.floor(Math.random() * totalWeight);
   // console.log(random)
   for (var i = 0; i < randLayers.length; i++) {
     // subtract the current weight from the random weight until we reach a sub zero value.
     // random -= randLayers[i].rarity[0];
-    if (random / randLayers.length < randLayers[i]) {
-      randLayersResults.push(randLayers[i]);
+    if(Array.isArray(randLayers[i].rarity[0])) {
+      if (random / randLayers.length < randLayers[i].rarity[0]) {
+        randLayersResults.push(randLayers[i]);
+      }
+    } else {
+      if (random / randLayers.length < Math.floor(Math.random() * 100) + 1) {
+        randLayersResults.push(randLayers[i]);
+      }
     }
+    
   }
   
   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
