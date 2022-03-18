@@ -288,7 +288,7 @@ const filterDNAOptions = (_dna) => {
  * @returns Cleaned DNA string without querystring parameters.
  */
 const removeQueryStrings = (_dna) => {
-  console.log(_dna)
+  // console.log(_dna)
   const query = /(\?.*$)/;
   return _dna.replace(query, "");
 };
@@ -368,7 +368,7 @@ const array_shuffle = (arr) => {
 
 // Remove the not required layer randomly
 const randomeLayer = (layers) => {
-  console.log(layers);
+  // console.log(layers);
   let randLayers = [];
   layerConfig.forEach(item => {
     if(item.required == false) {
@@ -392,15 +392,14 @@ const randomeLayer = (layers) => {
     // subtract the current weight from the random weight until we reach a sub zero value.
     // random -= randLayers[i].rarity[0];
     if(Array.isArray(randLayers[i].rarity[0])) {
-      if (random / randLayers.length < randLayers[i].rarity[0]) {
+      if (random / randLayers.length > randLayers[i].rarity[0]) {
         randLayersResults.push(randLayers[i]);
       }
     } else {
-      if (random / randLayers.length < Math.floor(Math.random() * 100) + 1) {
+      if (random / randLayers.length > Math.floor(Math.random() * 100) + 1) {
         randLayersResults.push(randLayers[i]);
       }
     }
-    
   }
   
   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
