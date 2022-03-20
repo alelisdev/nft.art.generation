@@ -3,10 +3,6 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const fs = require("fs");
 const sha1 = require('sha1')
 const { createCanvas, loadImage } = require('canvas');
-const { time } = require("console");
-const { isArray } = require("util");
-// const sha1 = require(`${basePath}/node_modules/sha1`);
-// const { createCanvas, loadImage } = require(`${basePath}/node_modules/canvas`);
 const buildDir = `${basePath}/build`;
 const layersDir = `${basePath}/layers`;
 const {
@@ -68,19 +64,29 @@ const buildSetup = () => {
 const getRarityWeight = (idx, path, required) => {
   let layerName = path.split('/').pop();
   const currentLayer = layerConfig.filter(item => item.name == layerName)[0];
-  const rarity = currentLayer.rarity;
+  let rarity = currentLayer.rarity;
+
   let weight = 1;
   if (Array.isArray(rarity)) {
-    weight = rarity[idx]
+    var tempRarity = [];
+    if(!required) {
+      rarity.forEach((item, index) => {
+        if(index !== 0) {
+          tempRarity.push(item);
+        }
+      })
+    }
+    weight = rarity[idx] !== undefined ? tempRarity[idx] : Math.floor(Math.random() * 100) + 1;
   } else if (rarity === 'random') {
     weight = Math.floor(Math.random() * 100) + 1
   } else {
     weight = 1
-  } 
+  }
   return weight;
 };
 
 const cleanDna = (_str) => {
+  console.log(_str);
   const withoutOptions = removeQueryStrings(_str);
   var dna = Number(withoutOptions.split(":").shift());
   return dna;
@@ -93,11 +99,9 @@ const cleanName = (_str) => {
 };
 
 const getElements = (path, required) => {
-  let files = fs.readdirSync(path);
-  if (!required) {
-    files.unshift('None.png');
-  }
-  return files.filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+  return fs
+    .readdirSync(path)
+    .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
     .map((i, index) => {
       return {
         id: index,
@@ -194,12 +198,7 @@ const addAttributes = (_element) => {
 
 const loadLayerImg = async (_layer) => {
   return new Promise(async (resolve) => {
-    let image;
-    if(_layer.selectedElement.name == 'None') {
-      image = await loadImage(`${basePath}/constants/none.png`);
-    } else {
-      image = await loadImage(`${_layer.selectedElement.path}`);
-    }
+    const image = await loadImage(`${_layer.selectedElement.path}`);
     resolve({ layer: _layer, loadedImage: image });
   });
 };
@@ -234,6 +233,9 @@ const drawElement = (_renderObject, _index, _layersLen) => {
 };
 
 const constructLayerToDna = (_dna = "", _layers = []) => {
+  console.log('_dna', _dna);
+  console.log(_dna.split(DNA_DELIMITER).length);
+  console.log(_layers);
   let mappedDnaToLayers = _layers.map((layer, index) => {
     let selectedElement = layer.elements.find(
       (e) => e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
@@ -285,7 +287,7 @@ const filterDNAOptions = (_dna) => {
  * @returns Cleaned DNA string without querystring parameters.
  */
 const removeQueryStrings = (_dna) => {
-  // console.log(_dna)
+  console.log(_dna)
   const query = /(\?.*$)/;
   return _dna.replace(query, "");
 };
@@ -296,14 +298,18 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
 };
 
 const createDna = (_layers) => {
-  
+  console.log(_layers.length);
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
     // let test = [11,2,22,1].sort((a, b) => b - a)
     // layer.sort((a, b) => b - a)
     layer.elements.forEach((element) => {
-      totalWeight += element.weight;
+      if(element.weight == undefined) {
+        totalWeight += Math.floor(Math.random() * 100) + 1;
+      } else {
+        totalWeight += element.weight;
+      }
     });
     // number between 0 - totalWeight
     
@@ -365,36 +371,38 @@ const array_shuffle = (arr) => {
 
 // Remove the not required layer randomly
 const randomeLayer = (layers) => {
-  // console.log(layers);
   let randLayers = [];
   layerConfig.forEach(item => {
     if(item.required == false) {
-      randLayers.push(item.name);
+      randLayers.push({name: item.name, rarity: item.rarity});
     }
   });
-
 
   let randLayersResults = [];
+  let totalWeight = 0;
   randLayers.forEach(layer => {
-    if (Math.random() < 0.5) {
-      randLayersResults.push(layer);
+    if(Array.isArray(layer.rarity)) {
+      totalWeight = totalWeight + layer.rarity[0];
+    } else {
+      totalWeight = totalWeight + Math.floor(Math.random() * 100) + 1;
     }
   });
-  // let random = Math.floor(Math.random() * totalWeight);
-  // // console.log(random)
-  // for (var i = 0; i < randLayers.length; i++) {
-  //   // subtract the current weight from the random weight until we reach a sub zero value.
-  //   // random -= randLayers[i].rarity[0];
-  //   if(Array.isArray(randLayers[i].rarity[0])) {
-  //     if (random / randLayers.length > randLayers[i].rarity[0]) {
-  //       randLayersResults.push(randLayers[i]);
-  //     }
-  //   } else {
-  //     if (random / randLayers.length > Math.floor(Math.random() * 100) + 1) {
-  //       randLayersResults.push(randLayers[i]);
-  //     }
-  //   }
-  // }
+  let random = Math.floor(Math.random() * totalWeight);
+  // console.log(random)
+  for (var i = 0; i < randLayers.length; i++) {
+    // subtract the current weight from the random weight until we reach a sub zero value.
+    // random -= randLayers[i].rarity[0];
+    if(Array.isArray(randLayers[i].rarity)) {
+      if (random / randLayers.length < randLayers[i].rarity[0]) {
+        randLayersResults.push(randLayers[i]);
+      }
+    } else {
+      if (random / randLayers.length < Math.floor(Math.random() * 100) + 1) {
+        randLayersResults.push(randLayers[i]);
+      }
+    }
+    
+  }
   
   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
 }
