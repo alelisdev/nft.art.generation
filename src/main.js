@@ -296,7 +296,8 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
 };
 
 const createDna = (_layers) => {
-  
+  // console.log(layers_mutual);
+  // let appliedLayers = [];
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
@@ -311,11 +312,17 @@ const createDna = (_layers) => {
     //   console.log(Math.random());
     // }
     let random = Math.floor(Math.random() * totalWeight);
+
+    // let appliedLayers = [];
+    
     // console.log(random)
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
+        // appliedLayers.push(layer.name);
+        // console.log(appliedLayers);
+        // console.log(layers_mutual[layer.name]);
         return randNum.push(
           `${layer.elements[i].id}:${layer.elements[i].filename}${
             layer.bypassDNA ? "?bypassDNA=true" : ""
@@ -325,6 +332,46 @@ const createDna = (_layers) => {
     }
   });
   return randNum.join(DNA_DELIMITER);
+};
+
+
+
+const outputRealLayers = (_layers) => {
+  let randNum = [];
+  _layers.forEach((layer) => {
+    var totalWeight = 0;
+    // let test = [11,2,22,1].sort((a, b) => b - a)
+    // layer.sort((a, b) => b - a)
+    layer.elements.forEach((element) => {
+      totalWeight += element.weight;
+    });
+    // number between 0 - totalWeight
+    
+    // for (let i = 0; i < 100; i++) {
+    //   console.log(Math.random());
+    // }
+    let random = Math.floor(Math.random() * totalWeight);
+
+    // let appliedLayers = [];
+    
+    // console.log(random)
+    for (var i = 0; i < layer.elements.length; i++) {
+      // subtract the current weight from the random weight until we reach a sub zero value.
+      random -= layer.elements[i].weight;
+      if (random < 0) {
+        // appliedLayers.push(layer.name);
+        // console.log(appliedLayers);
+        // console.log(layers_mutual[layer.name]);
+        return randNum.push({
+          name: layer.name, 
+          item:`${layer.elements[i].id}:${layer.elements[i].filename}${
+            layer.bypassDNA ? "?bypassDNA=true" : ""
+          }`
+        });
+      }
+    }
+  });
+  return randNum;
 };
 
 const writeMetaData = (_data) => {
@@ -399,6 +446,24 @@ const randomeLayer = (layers) => {
   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
 }
 
+
+const randomeLayer1 = (layers) => {
+  let randLayers = [];
+  layerConfig.forEach(item => {
+    if(item.required == false) {
+      randLayers.push(item.name);
+    }
+  });
+
+  let randLayersResults = [];
+  randLayers.forEach(layer => {
+    if (Math.random() < 0.5) {
+      randLayersResults.push(layer);
+    }
+  });
+  return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
+}
+
 // The rule can't be used together in layers
 const rule = (layers) => {
   let remove_order = [];
@@ -432,8 +497,67 @@ const rule = (layers) => {
       }
     }
   })
-  return resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
+  resLayer = resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
+  return resLayer;
 }
+
+// The rule can't be used together in layers
+const rule1 = (layers) => {
+  let remove_order = [];
+  layers.forEach(layer => {
+    remove_order.push(layer)
+  });
+
+
+  array_shuffle(remove_order);
+  let removed_layer = [];
+  let real_layer = [];
+  let resLayer = layers;
+  
+  remove_order.forEach((item) => {
+    if (real_layer.some(r=> layers_mutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
+      removed_layer.push(item.name);
+    } else if (removed_layer.some(r=> layers_mutual[item.name].includes(r)) && removed_layer.indexOf(item.name) == -1) {
+      removed_layer.push(item.name);
+    } else if (layers_mutual[item.name] && layers_mutual[item.name].length > 0) {
+      if(real_layer.indexOf(item.name) == -1 && removed_layer.indexOf(item.name) == -1 && !item.item.includes('None.png')) {
+        real_layer.push(item.name);
+        layers_mutual[item.name].forEach((val) => {
+          if (removed_layer.indexOf(val) == -1) {
+            removed_layer.push(val);
+          }
+        })
+      } else if(removed_layer.indexOf(item.name)){
+        removed_layer.push(item.name);
+      }
+    } else {
+      if(real_layer.indexOf(item.name) == -1 && removed_layer.indexOf(item.name) == -1 && !item.item.includes('None.png')) {
+        real_layer.push(item.name);
+      } else if(removed_layer.indexOf(item.name)) {
+        removed_layer.push(item.name);
+      }
+    }
+  })
+
+  
+  // console.log(resLayer);
+  // console.log(removed_layer);
+  // removed_layer.forEach(element => {
+  //   console.log(layers_mutual[element]);
+  //   if(layers_mutual[element] !== []) {
+  //     layers_mutual[element].forEach((item) => {
+  //       resLayer.forEach((l) => {
+  //         if(l.name == item && l.item == '0:None.png') {
+
+  //         }
+  //       })
+  //     })
+  //   } 
+  // });
+  resLayer = resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
+  return resLayer;
+}
+
 
 const startCreating = async () => {
   let editionCount = 1;
@@ -450,9 +574,34 @@ const startCreating = async () => {
     : null;
   const layers = layersSetup();
   while ( editionCount <= growEditionSizeTo ) {
-    let randLyers = randomeLayer(layers);
-    let custom_layers = rule(randLyers);
-    let newDna = createDna(custom_layers);
+    let outputlayers = outputRealLayers(layers);
+    // console.log('outputlayers', outputlayers);
+    // console.log('outputlayers', outputlayers.length);
+
+    let randLyers = randomeLayer1(outputlayers);
+    // console.log('randLyers', randLyers);
+    // console.log('randLyers', randLyers.length);
+    let finalLayers = rule1(randLyers);
+    let newDnaArray = [];
+    let newLayerArray = [];
+    finalLayers.forEach((finalLayer) => {
+      newDnaArray.push(finalLayer.item);
+      newLayerArray.push(finalLayer.name);
+    })
+    let newDna = newDnaArray.join(DNA_DELIMITER);
+    customLayers = [];
+    layers.forEach((layer) => {
+      if(newLayerArray.indexOf(layer.name) !== -1) {
+        customLayers.push(layer);
+      }
+    })
+    // console.log('custom_layers', custom_layers);
+
+    // let randLyers = randomeLayer(layers);
+    // let custom_layers = rule(randLyers);
+    // console.log(custom_layers);
+    // let newDna = createDna(custom_layers);
+    // console.log(newDna);
     // Hair/Mohawk.pngMohawk.png can not be used
     let HatsElements = [];
     let WigsElements = [];
@@ -479,7 +628,7 @@ const startCreating = async () => {
     }
 
     if (isDnaUnique(dnaList, newDna)) {
-      let results = constructLayerToDna(newDna, custom_layers);
+      let results = constructLayerToDna(newDna, customLayers);
       let loadedElements = [];
       results.forEach((layer) => {
         loadedElements.push(loadLayerImg(layer));
