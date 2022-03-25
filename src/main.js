@@ -574,29 +574,53 @@ const startCreating = async () => {
     : null;
   const layers = layersSetup();
   while ( editionCount <= growEditionSizeTo ) {
+
     let outputlayers = outputRealLayers(layers);
     // console.log('outputlayers', outputlayers);
     // console.log('outputlayers', outputlayers.length);
 
-    let randLyers = randomeLayer(outputlayers);
+    // let randLyers = randomeLayer(outputlayers);
     // console.log('randLyers', randLyers);
     // console.log('randLyers', randLyers.length);
-    let finalLayers = rule1(randLyers);
+    let finalLayers = rule1(outputlayers);
     let newDnaArray = [];
     let newLayerArray = [];
+
     console.log('--------------------------------------------')
+    // console.log(outputlayers);
+    // console.log(outputlayers.length);
     finalLayers.forEach((finalLayer) => {
       newDnaArray.push(finalLayer.item);
       newLayerArray.push(finalLayer.name);
-      console.log(finalLayer.name);
+      // console.log(finalLayer.name);
     })
+
+    if(newLayerArray.indexOf('Masks') == -1 && newLayerArray.indexOf('Mouths') == -1) {
+      // console.log('Both masks and mouths are not applied at all!');
+      continue;
+    }
+
+    // console.log(newLayerArray);
+    if(newLayerArray.indexOf('Shirts') !== -1 && newLayerArray.indexOf(('Jackets')) !== -1) {
+      console.log('Jackets and Shirts were applied once', newLayerArray);
+    }
+    if(newLayerArray.indexOf('Jerseys') !== -1 && newLayerArray.indexOf(('Jackets')) !== -1) {
+      console.log('Jerseys and Jackets were applied once', newLayerArray);
+    }
+    if(newLayerArray.indexOf('Mouths') !== -1) {
+      console.log('Mouths layer was applied')
+    }
+    if(newLayerArray.indexOf(('Masks')) !== -1) {
+      console.log('Masks layer was applied')
+    }
+    console.log('--------------------------------------------')
+
     let newDna = newDnaArray.join(DNA_DELIMITER);
     // console.log(newDna);
-    console.log('--------------------------------------------')
 
     customLayers = [];
     layers.forEach((layer) => {
-      if(newLayerArray.indexOf(layer.name) !== -1) {
+      if(newLayerArray.indexOf(layer.name) !== -1) {    
         customLayers.push(layer);
       }
     })
