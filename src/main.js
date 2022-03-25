@@ -447,22 +447,22 @@ const randomeLayer = (layers) => {
 }
 
 
-const randomeLayer1 = (layers) => {
-  let randLayers = [];
-  layerConfig.forEach(item => {
-    if(item.required == false) {
-      randLayers.push(item.name);
-    }
-  });
+// const randomeLayer1 = (layers) => {
+//   let randLayers = [];
+//   layerConfig.forEach(item => {
+//     if(item.required == false) {
+//       randLayers.push(item.name);
+//     }
+//   });
 
-  let randLayersResults = [];
-  randLayers.forEach(layer => {
-    if (Math.random() < 0.5) {
-      randLayersResults.push(layer);
-    }
-  });
-  return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
-}
+//   let randLayersResults = [];
+//   randLayers.forEach(layer => {
+//     if (Math.random() < 0.5) {
+//       randLayersResults.push(layer);
+//     }
+//   });
+//   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
+// }
 
 // The rule can't be used together in layers
 const rule = (layers) => {
@@ -578,24 +578,29 @@ const startCreating = async () => {
     // console.log('outputlayers', outputlayers);
     // console.log('outputlayers', outputlayers.length);
 
-    let randLyers = randomeLayer1(outputlayers);
+    let randLyers = randomeLayer(outputlayers);
     // console.log('randLyers', randLyers);
     // console.log('randLyers', randLyers.length);
     let finalLayers = rule1(randLyers);
     let newDnaArray = [];
     let newLayerArray = [];
+    console.log('--------------------------------------------')
     finalLayers.forEach((finalLayer) => {
       newDnaArray.push(finalLayer.item);
       newLayerArray.push(finalLayer.name);
+      console.log(finalLayer.name);
     })
     let newDna = newDnaArray.join(DNA_DELIMITER);
+    // console.log(newDna);
+    console.log('--------------------------------------------')
+
     customLayers = [];
     layers.forEach((layer) => {
       if(newLayerArray.indexOf(layer.name) !== -1) {
         customLayers.push(layer);
       }
     })
-    // console.log('custom_layers', custom_layers);
+    // console.log('custom_layers', customLayers);
 
     // let randLyers = randomeLayer(layers);
     // let custom_layers = rule(randLyers);
