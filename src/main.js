@@ -548,7 +548,6 @@ const startCreating = async () => {
     if(newLayerArray.indexOf(('Masks')) !== -1) {
       console.log('Masks layer was applied')
     }
-    console.log('--------------------------------------------')
 
     let newDna = newDnaArray.join(DNA_DELIMITER);
     // console.log(newDna);
@@ -559,14 +558,7 @@ const startCreating = async () => {
         customLayers.push(layer);
       }
     })
-    // console.log('custom_layers', customLayers);
-
-    // let randLyers = randomeLayer(layers);
-    // let custom_layers = rule(randLyers);
-    // console.log(custom_layers);
-    // let newDna = createDna(custom_layers);
-    // console.log(newDna);
-    // Hair/Mohawk.pngMohawk.png can not be used
+    
     let HatsElements = [];
     let WigsElements = [];
     HatsElements = fs.readdirSync(`${basePath}/layers/Hats`);
