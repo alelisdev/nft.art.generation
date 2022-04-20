@@ -320,9 +320,6 @@ const createDna = (_layers) => {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
-        // appliedLayers.push(layer.name);
-        // console.log(appliedLayers);
-        // console.log(layers_mutual[layer.name]);
         return randNum.push(
           `${layer.elements[i].id}:${layer.elements[i].filename}${
             layer.bypassDNA ? "?bypassDNA=true" : ""
