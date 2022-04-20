@@ -354,14 +354,10 @@ const outputRealLayers = (_layers) => {
 
     // let appliedLayers = [];
     
-    // console.log(random)
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
-        // appliedLayers.push(layer.name);
-        // console.log(appliedLayers);
-        // console.log(layers_mutual[layer.name]);
         return randNum.push({
           name: layer.name, 
           item:`${layer.elements[i].id}:${layer.elements[i].filename}${
