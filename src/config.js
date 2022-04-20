@@ -109,7 +109,7 @@ const layerConfig = [
   {
     id: 13,
     name: 'Eyes',
-    mutual: [],
+    mutual: ['SpecialEyes'],
     required: true,
     rarity: 'None',
   },
