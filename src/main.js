@@ -500,21 +500,6 @@ const rule1 = (layers) => {
     }
   })
 
-  
-  // console.log(resLayer);
-  // console.log(removed_layer);
-  // removed_layer.forEach(element => {
-  //   console.log(layers_mutual[element]);
-  //   if(layers_mutual[element] !== []) {
-  //     layers_mutual[element].forEach((item) => {
-  //       resLayer.forEach((l) => {
-  //         if(l.name == item && l.item == '0:None.png') {
-
-  //         }
-  //       })
-  //     })
-  //   } 
-  // });
   resLayer = resLayer.filter(item => removed_layer.indexOf(item.name) == -1);
   return resLayer;
 }
