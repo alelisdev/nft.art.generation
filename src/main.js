@@ -404,6 +404,7 @@ function shuffle(array) {
   }
   return array;
 }
+
 // shffule the removing layers
 const array_shuffle = (arr) => {
   arr.sort(() => Math.random() - 0.5);
