@@ -522,27 +522,16 @@ const startCreating = async () => {
   while ( editionCount <= growEditionSizeTo ) {
 
     let outputlayers = outputRealLayers(layers);
-    // console.log('outputlayers', outputlayers);
-    // console.log('outputlayers', outputlayers.length);
-
-    // let randLyers = randomeLayer(outputlayers);
-    // console.log('randLyers', randLyers);
-    // console.log('randLyers', randLyers.length);
     let finalLayers = rule1(outputlayers);
     let newDnaArray = [];
     let newLayerArray = [];
 
-    console.log('--------------------------------------------')
-    // console.log(outputlayers);
-    // console.log(outputlayers.length);
     finalLayers.forEach((finalLayer) => {
       newDnaArray.push(finalLayer.item);
       newLayerArray.push(finalLayer.name);
-      // console.log(finalLayer.name);
     })
 
     if(newLayerArray.indexOf('Masks') == -1 && newLayerArray.indexOf('Mouths') == -1) {
-      // console.log('Both masks and mouths are not applied at all!');
       continue;
     }
 
