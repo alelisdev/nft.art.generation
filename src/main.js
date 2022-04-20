@@ -296,8 +296,6 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
 };
 
 const createDna = (_layers) => {
-  // console.log(layers_mutual);
-  // let appliedLayers = [];
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
