@@ -408,22 +408,22 @@ const randomeLayer = (layers) => {
 }
 
 
-// const randomeLayer1 = (layers) => {
-//   let randLayers = [];
-//   layerConfig.forEach(item => {
-//     if(item.required == false) {
-//       randLayers.push(item.name);
-//     }
-//   });
+const randomeLayer1 = (layers) => {
+  let randLayers = [];
+  layerConfig.forEach(item => {
+    if(item.required == false) {
+      randLayers.push(item.name);
+    }
+  });
 
-//   let randLayersResults = [];
-//   randLayers.forEach(layer => {
-//     if (Math.random() < 0.5) {
-//       randLayersResults.push(layer);
-//     }
-//   });
-//   return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
-// }
+  let randLayersResults = [];
+  randLayers.forEach(layer => {
+    if (Math.random() < 0.5) {
+      randLayersResults.push(layer);
+    }
+  });
+  return layers.filter(layer => randLayersResults.indexOf(layer.name) == -1);
+}
 
 // The rule can't be used together in layers
 const rule = (layers) => {
@@ -535,7 +535,6 @@ const startCreating = async () => {
       continue;
     }
 
-    // console.log(newLayerArray);
     if(newLayerArray.indexOf('Shirts') !== -1 && newLayerArray.indexOf(('Jackets')) !== -1) {
       console.log('Jackets and Shirts were applied once', newLayerArray);
     }
