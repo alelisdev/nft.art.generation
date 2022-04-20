@@ -301,16 +301,10 @@ const createDna = (_layers) => {
   let randNum = [];
   _layers.forEach((layer) => {
     var totalWeight = 0;
-    // let test = [11,2,22,1].sort((a, b) => b - a)
-    // layer.sort((a, b) => b - a)
     layer.elements.forEach((element) => {
       totalWeight += element.weight;
     });
     // number between 0 - totalWeight
-    
-    // for (let i = 0; i < 100; i++) {
-    //   console.log(Math.random());
-    // }
     let random = Math.floor(Math.random() * totalWeight);
 
     // let appliedLayers = [];
